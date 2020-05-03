@@ -1,8 +1,7 @@
-output "aws_instance.tf_efs_sandbox.public_ip" {
+output "aws_instance.instance.public_ip" {
   value = "${aws_instance.instance.public_ip}"
 }
 
-
-output "aws_instance.tf_efs_sandbox.id" {
+output "aws_instance.instance.id" {
   value = "${aws_instance.instance.id}"
 }

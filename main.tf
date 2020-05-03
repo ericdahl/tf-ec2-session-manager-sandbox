@@ -29,14 +29,15 @@ data "aws_ami" "amazon_linux_2" {
 }
 
 resource "aws_instance" "instance" {
-  ami                    = "${data.aws_ami.amazon_linux_2.image_id}"
-  instance_type          = "t2.small"
-  subnet_id              = "${module.vpc.subnet_public1}"
+  ami           = "${data.aws_ami.amazon_linux_2.image_id}"
+  instance_type = "t2.small"
+  subnet_id     = "${module.vpc.subnet_private1}"
+
   vpc_security_group_ids = [
-    "${module.vpc.sg_allow_22}",
-    "${module.vpc.sg_allow_egress}"
+    "${module.vpc.sg_allow_egress}",
   ]
-  key_name               = "${var.key_name}"
+
+  key_name = "${var.key_name}"
 
   iam_instance_profile = "${aws_iam_instance_profile.ec2_session_manager.name}"
 
@@ -45,13 +46,6 @@ resource "aws_instance" "instance" {
   }
 }
 
-
-
-
 resource "aws_s3_bucket" "ssm_logs" {
   bucket = "${replace(var.name, "_", "-")}"
 }
-
-
-
-

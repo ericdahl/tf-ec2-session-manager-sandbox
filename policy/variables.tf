@@ -1,5 +1,4 @@
-variable "name" {
-}
+variable "name" {}
 
 variable "role_names" {
   default = []
