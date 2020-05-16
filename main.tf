@@ -4,7 +4,7 @@ provider "aws" {
 
 module "vpc" {
   source        = "github.com/ericdahl/tf-vpc"
-  admin_ip_cidr = "${var.admin_cidr}"
+  admin_ip_cidr = var.admin_cidr
 }
 
 data "aws_ami" "amazon_linux_2" {
@@ -29,23 +29,24 @@ data "aws_ami" "amazon_linux_2" {
 }
 
 resource "aws_instance" "instance" {
-  ami           = "${data.aws_ami.amazon_linux_2.image_id}"
+  ami           = data.aws_ami.amazon_linux_2.image_id
   instance_type = "t2.small"
-  subnet_id     = "${module.vpc.subnet_private1}"
+  subnet_id     = module.vpc.subnet_private1
 
   vpc_security_group_ids = [
-    "${module.vpc.sg_allow_egress}",
+    module.vpc.sg_allow_egress,
   ]
 
-  key_name = "${var.key_name}"
+  key_name = var.key_name
 
-  iam_instance_profile = "${aws_iam_instance_profile.ec2_session_manager.name}"
+  iam_instance_profile = aws_iam_instance_profile.ec2_session_manager.name
 
-  tags {
-    Name = "${var.name}"
+  tags = {
+    Name = var.name
   }
 }
 
 resource "aws_s3_bucket" "ssm_logs" {
-  bucket = "${replace(var.name, "_", "-")}"
+  bucket = replace(var.name, "_", "-")
 }
+
